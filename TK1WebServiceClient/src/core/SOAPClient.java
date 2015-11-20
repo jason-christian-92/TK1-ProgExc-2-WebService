@@ -2,6 +2,8 @@ package core;
 
 import java.awt.BorderLayout;
 import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -32,7 +34,7 @@ public class SOAPClient extends JFrame implements IClient{
 	
 	private void setupGUI(){
 		gui = new ClientGUI();
-		this.setSize(600, 300);
+		this.setSize(625, 300);
 		this.setTitle("TK1 -SOAP-RPC- Client's Shopping Cart");
 		this.setVisible(true);
 		this.add(gui);
