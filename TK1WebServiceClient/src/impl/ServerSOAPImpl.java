@@ -23,25 +23,41 @@ public interface ServerSOAPImpl {
     /**
      * 
      * @return
+     *     returns int
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://impl/ServerSOAPImpl/loginRequest", output = "http://impl/ServerSOAPImpl/loginResponse")
+    public int login();
+
+    /**
+     * 
+     * @param arg0
+     */
+    @WebMethod
+    @Action(input = "http://impl/ServerSOAPImpl/logoutRequest", output = "http://impl/ServerSOAPImpl/logoutResponse")
+    public void logout(
+        @WebParam(name = "arg0", partName = "arg0")
+        int arg0);
+
+    /**
+     * 
+     * @param arg2
+     * @param arg1
+     * @param arg0
+     * @return
      *     returns java.lang.String
      */
     @WebMethod
     @WebResult(partName = "return")
-    @Action(input = "http://impl/ServerSOAPImpl/getItemsRequest", output = "http://impl/ServerSOAPImpl/getItemsResponse")
-    public String getItems();
-
-    /**
-     * 
-     * @param id
-     * @return
-     *     returns boolean
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    @Action(input = "http://impl/ServerSOAPImpl/isItemAvailableRequest", output = "http://impl/ServerSOAPImpl/isItemAvailableResponse")
-    public boolean isItemAvailable(
-        @WebParam(name = "id", partName = "id")
-        int id);
+    @Action(input = "http://impl/ServerSOAPImpl/addToCartRequest", output = "http://impl/ServerSOAPImpl/addToCartResponse")
+    public String addToCart(
+        @WebParam(name = "arg0", partName = "arg0")
+        int arg0,
+        @WebParam(name = "arg1", partName = "arg1")
+        int arg1,
+        @WebParam(name = "arg2", partName = "arg2")
+        int arg2);
 
     /**
      * 
@@ -55,5 +71,41 @@ public interface ServerSOAPImpl {
     public String getItemById(
         @WebParam(name = "id", partName = "id")
         int id);
+
+    /**
+     * 
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://impl/ServerSOAPImpl/getItemsRequest", output = "http://impl/ServerSOAPImpl/getItemsResponse")
+    public String getItems();
+
+    /**
+     * 
+     * @param arg0
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://impl/ServerSOAPImpl/getClientCartRequest", output = "http://impl/ServerSOAPImpl/getClientCartResponse")
+    public String getClientCart(
+        @WebParam(name = "arg0", partName = "arg0")
+        int arg0);
+
+    /**
+     * 
+     * @param arg0
+     * @return
+     *     returns double
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://impl/ServerSOAPImpl/checkOutCartRequest", output = "http://impl/ServerSOAPImpl/checkOutCartResponse")
+    public double checkOutCart(
+        @WebParam(name = "arg0", partName = "arg0")
+        int arg0);
 
 }

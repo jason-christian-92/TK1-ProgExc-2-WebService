@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 
+import javax.net.ssl.SSLEngineResult.Status;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,6 +16,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import objects.ItemObject;
+import objects.StatusMessageObject;
 
 public class XMLParser {
 
@@ -25,6 +27,22 @@ public class XMLParser {
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(new InputSource(new StringReader(xml)));
 		return doc.getDocumentElement().getChildNodes();
+	}
+	
+	public static StatusMessageObject parseStatusMessage(String data) throws ParserConfigurationException, 
+				SAXException, IOException{
+		NodeList nodeList = xmlToNodeList(data);
+		StatusMessageObject msg = new StatusMessageObject();
+		for (int i = 0 ; i < nodeList.getLength() ; i++){
+			Node nd = nodeList.item(i);
+			String content = nd.getLastChild().getTextContent().trim();
+			if (nd.getNodeName() == "status"){
+				msg.setStatusCode(Integer.parseInt(content));
+			} else if (nd.getNodeName() == "msg"){
+				msg.setMessage(content);
+			}
+		}
+		return msg;
 	}
 	
 	public static ArrayList<ItemObject> parseToListItemObject(String xml) throws ParserConfigurationException, 

@@ -15,8 +15,12 @@ public interface IServer {
 	public boolean isItemAvailable(int id);
 	*/
 	
+	public int login();
+	public String addToCart(int clientId, int itemId, int amount);
+	public String getClientCart(int clientId);
 	public String getItemById(int id);
 	public String getItems();
-	public boolean isItemAvailable(int id);
+	public double checkOutCart(int clientId);
+	public void logout(int clientId);
 	
 }

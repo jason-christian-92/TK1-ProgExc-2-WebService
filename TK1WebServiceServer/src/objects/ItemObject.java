@@ -11,6 +11,21 @@ public class ItemObject{
 		
 	}
 	
+	public static ItemObject createFalseObject(){
+		ItemObject item = new ItemObject();
+		item.setID(-1);
+		return item;
+	}
+	
+	public static ItemObject clone(ItemObject existing){
+		ItemObject item = new ItemObject();
+		item.setID(existing.getID());
+		item.setName(existing.getName());
+		item.setPrice(existing.getPrice());
+		item.setAmount(existing.getAmount());
+		return item;
+	}
+	
 	public ItemObject(int id, String name, int amount, double price){
 		this.id = id;
 		this.amount = amount;

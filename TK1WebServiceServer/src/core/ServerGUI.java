@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class ServerGUI extends JPanel{
@@ -20,7 +21,7 @@ public class ServerGUI extends JPanel{
 	private JPanel pnlControl;
 	private JButton btnSOAPServer, btnRESTServer;
 	private JLabel lblStatusSOAP, lblStatusREST;
-	private JTextArea txtStatuses;
+	private static JTextArea txtStatuses;
 	
 	public ServerGUI(){
 		this.setLayout(new BorderLayout());
@@ -45,7 +46,7 @@ public class ServerGUI extends JPanel{
 		pnlControl.add(btnRESTServer);
 		pnlControl.add(lblStatusREST);
 		add(pnlControl, BorderLayout.CENTER);
-		add(txtStatuses, BorderLayout.SOUTH);
+		add(new JScrollPane(txtStatuses), BorderLayout.SOUTH);
 	}
 	
 	public void setButtonListener(ActionListener listener){
@@ -53,7 +54,7 @@ public class ServerGUI extends JPanel{
 		btnRESTServer.addActionListener(listener);
 	}
 	
-	public void appendStatus(String stat){
+	public static void appendStatus(String stat){
 		txtStatuses.append(stat+"\n");
 	}
 	

@@ -52,7 +52,8 @@ public class Server extends JFrame {
 	}
 	
 	private void setupGUI(){
-		this.setSize(500, 200);
+		this.setTitle("TK1 Web Service Control Panel");
+		this.setSize(400, 250);
 		this.setVisible(true);
 		gui = new ServerGUI();
 		gui.setButtonListener(listener);
