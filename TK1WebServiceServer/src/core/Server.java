@@ -20,6 +20,10 @@ public class Server extends JFrame {
 	public static final String REST_URI = "http://localhost:8080/tk1wsshoppingcart";
 	
 	private Endpoint ep;
+	
+	private HttpServer restServer;
+	private boolean isRestServerOn;
+	
 	private ServerGUI gui;
 	private ActionListener listener = new ActionListener() {
 		@Override
@@ -36,19 +40,27 @@ public class Server extends JFrame {
 				}
 			} else {
 				//for REST server...
+				if (isRestServerOn){
+					restServer.stop(0);
+					gui.toggleServerStatus(false, typ);
+				} else {
+					restServer.start();
+					gui.toggleServerStatus(true, typ);
+				}
 			}
 		}
 	};
 	
 	public Server() throws IOException{
 		ep = Endpoint.publish(SOAP_URI, new ServerSOAPImpl());
-		//System.out.println("WSDL server successfully deployed!");
-		setupGUI();
-		/*
-		HttpServer restServer = HttpServerFactory.create(REST_URI);
+		System.out.println("WSDL server successfully deployed!");
+		
+		isRestServerOn = true;
+		restServer = HttpServerFactory.create(REST_URI);
 		restServer.start();
 		System.out.println("RESTFul server successfully deployed!");
-		*/
+		
+		setupGUI();
 	}
 	
 	private void setupGUI(){

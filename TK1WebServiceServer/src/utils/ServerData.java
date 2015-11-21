@@ -121,7 +121,7 @@ public class ServerData {
 			ClientShoppingCart cart = Carts.get(i);
 			if (cart.getClientID() == clientId) continue;
 			int itemsInCart = getItemAmountFromArrayList(itemId, cart.getItems());
-			if (itemsInCart == -9999) return -9999;
+			if (itemsInCart == -9999) continue;
 			itemInStock -= itemsInCart;
 		}
 		

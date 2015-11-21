@@ -23,20 +23,46 @@ public interface ServerSOAPImpl {
     /**
      * 
      * @return
-     *     returns int
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://impl/ServerSOAPImpl/getItemsRequest", output = "http://impl/ServerSOAPImpl/getItemsResponse")
+    public String getItems();
+
+    /**
+     * 
+     * @param id
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://impl/ServerSOAPImpl/getItemByIdRequest", output = "http://impl/ServerSOAPImpl/getItemByIdResponse")
+    public String getItemById(
+        @WebParam(name = "id", partName = "id")
+        int id);
+
+    /**
+     * 
+     * @return
+     *     returns java.lang.String
      */
     @WebMethod
     @WebResult(partName = "return")
     @Action(input = "http://impl/ServerSOAPImpl/loginRequest", output = "http://impl/ServerSOAPImpl/loginResponse")
-    public int login();
+    public String login();
 
     /**
      * 
      * @param arg0
+     * @return
+     *     returns java.lang.String
      */
     @WebMethod
+    @WebResult(partName = "return")
     @Action(input = "http://impl/ServerSOAPImpl/logoutRequest", output = "http://impl/ServerSOAPImpl/logoutResponse")
-    public void logout(
+    public String logout(
         @WebParam(name = "arg0", partName = "arg0")
         int arg0);
 
@@ -61,29 +87,6 @@ public interface ServerSOAPImpl {
 
     /**
      * 
-     * @param id
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    @Action(input = "http://impl/ServerSOAPImpl/getItemByIdRequest", output = "http://impl/ServerSOAPImpl/getItemByIdResponse")
-    public String getItemById(
-        @WebParam(name = "id", partName = "id")
-        int id);
-
-    /**
-     * 
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    @Action(input = "http://impl/ServerSOAPImpl/getItemsRequest", output = "http://impl/ServerSOAPImpl/getItemsResponse")
-    public String getItems();
-
-    /**
-     * 
      * @param arg0
      * @return
      *     returns java.lang.String
@@ -99,12 +102,12 @@ public interface ServerSOAPImpl {
      * 
      * @param arg0
      * @return
-     *     returns double
+     *     returns java.lang.String
      */
     @WebMethod
     @WebResult(partName = "return")
     @Action(input = "http://impl/ServerSOAPImpl/checkOutCartRequest", output = "http://impl/ServerSOAPImpl/checkOutCartResponse")
-    public double checkOutCart(
+    public String checkOutCart(
         @WebParam(name = "arg0", partName = "arg0")
         int arg0);
 

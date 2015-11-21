@@ -40,23 +40,25 @@ public class ServerSOAPImpl implements IServer{
 
 	@WebMethod
 	@Override
-	public int login() {
+	public String login() {
 		// TODO Auto-generated method stub
 		int clientId = ServerData.addNewClient();
 		ClientShoppingCart cart = new ClientShoppingCart();
 		cart.setClientID(clientId);
 		ServerData.Carts.add(cart);
-		return clientId;
+		ServerGUI.appendStatus("new client logged in using SOAP protocol! Given ID:"+clientId);
+		return String.valueOf(clientId);
 	}
 
 	@WebMethod
 	@Override
-	public void logout(int clientId) {
+	public String logout(int clientId) {
 		// TODO Auto-generated method stub
 		//System.out.println("ClientId "+clientId+" logged out! returning back all items in the cart...");
 		ServerGUI.appendStatus("ClientId "+clientId+" logged out! returning back all items in the cart...");
 		ServerData.removeAllItemsFromCart(clientId);
 		ServerData.removeCartByClientId(clientId);
+		return String.valueOf(clientId);
 	}
 
 	@WebMethod
@@ -80,11 +82,15 @@ public class ServerSOAPImpl implements IServer{
 			if (desiredItem.getID() == -1){
 				return "<data><status>-3</status><msg>Item does not exist!</msg></data>";
 			} else {
-				ItemObject clone = ItemObject.clone(desiredItem);
-				clone.setAmount(amount);
-				cart.addItem(clone);
-				ServerGUI.appendStatus("Stock:"+left+" | item is added to clientId "+clientId+"'s cart!");
-				return "<data><status>1</status><msg>Item has been added to cart</msg></data>";
+				if (left < amount){
+					return "<data><status>-2</status><msg>Not enough in stock! Only "+left+" items left!</msg></data>";
+				} else {
+					ItemObject clone = ItemObject.clone(desiredItem);
+					clone.setAmount(amount);
+					cart.addItem(clone);
+					ServerGUI.appendStatus("Stock:"+left+" | item is added to clientId "+clientId+"'s cart!");
+					return "<data><status>1</status><msg>Item has been added to cart</msg></data>";
+				}
 			}
 		} else { //already exist, compare amount
 			if (left > amount) {
@@ -109,11 +115,11 @@ public class ServerSOAPImpl implements IServer{
 
 	@WebMethod
 	@Override
-	public double checkOutCart(int clientId) {
+	public String checkOutCart(int clientId) {
 		// TODO Auto-generated method stub
 		ServerGUI.appendStatus("clientId "+clientId+" requested checkout! processing...");
 		double pay = ServerData.checkOut(clientId).calculateTotalPrice(0);
 		ServerGUI.appendStatus("checkout process complete for clientId "+clientId+"! paid € "+pay);
-		return pay;
+		return String.valueOf(pay);
 	}	
 }

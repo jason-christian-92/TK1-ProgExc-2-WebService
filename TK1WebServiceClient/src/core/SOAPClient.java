@@ -47,7 +47,7 @@ public class SOAPClient extends JFrame implements IClient,WindowListener{
 	@Override
 	public void sendBuyRequest() {
 		// TODO Auto-generated method stub
-		double sum = server.checkOutCart(clientId);
+		double sum = Double.parseDouble(server.checkOutCart(clientId));
 		gui.setupCart(null);
 		sendItemListRequest();
 		gui.setStatus("Checkout completed! Total sum to be paid: € "+sum);
@@ -72,7 +72,7 @@ public class SOAPClient extends JFrame implements IClient,WindowListener{
 	@Override
 	public void sendLogin() {
 		// TODO Auto-generated method stub
-		clientId = server.login();
+		clientId = Integer.parseInt(server.login());
 		gui.setStatus("Successfully logged in! Obtained client ID: "+clientId+" from server!");
 		sendItemListRequest();
 	}
