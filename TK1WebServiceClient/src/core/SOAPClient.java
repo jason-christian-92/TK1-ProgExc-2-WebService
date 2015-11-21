@@ -2,10 +2,14 @@ package core;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import objects.ItemObject;
 import objects.StatusMessageObject;
@@ -47,13 +51,21 @@ public class SOAPClient extends JFrame implements IClient,WindowListener{
 	@Override
 	public void sendBuyRequest() {
 		// TODO Auto-generated method stub
-		double sum = Double.parseDouble(server.checkOutCart(clientId));
-		gui.setupCart(null);
-		sendItemListRequest();
-		gui.setStatus("Checkout completed! Total sum to be paid: € "+sum);
-		JOptionPane.showConfirmDialog(null, 
-				"Server successfully checked out all items in your cart!\nTotal paid: € "+sum,
-				"Check out success!", JOptionPane.OK_OPTION);
+		String result = server.checkOutCart(clientId);
+		try {
+			StatusMessageObject status = XMLParser.parseStatusMessage(result);
+			if (status.getStatusCode() == 1){
+				gui.setupCart(null);	
+			}
+			sendItemListRequest();
+			gui.setStatus(status.getMessage());
+			JOptionPane.showConfirmDialog(null, 
+					status.getMessage(),
+					"Check out information!", JOptionPane.OK_OPTION);
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import iface.IClient;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.ws.rs.core.MediaType;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -115,7 +116,22 @@ public class RESTClient extends JFrame implements IClient,WindowListener{
 	@Override
 	public void sendBuyRequest() {
 		// TODO Auto-generated method stub
-		
+		WebResource checkOutService = service.path(URI_CHECKOUT).path(String.valueOf(clientId));
+		String result = checkOutService.accept(MediaType.TEXT_XML).get(String.class);
+		try {
+			StatusMessageObject status = XMLParser.parseStatusMessage(result);
+			if (status.getStatusCode() == 1){
+				gui.setupCart(null);	
+			}
+			sendItemListRequest();
+			gui.setStatus(status.getMessage());
+			JOptionPane.showConfirmDialog(null, 
+					status.getMessage(),
+					"Check out information!", JOptionPane.OK_OPTION);
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

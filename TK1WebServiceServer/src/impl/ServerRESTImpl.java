@@ -120,15 +120,20 @@ public class ServerRESTImpl implements IServer{
 	}
 
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.TEXT_XML)
 	@Path("checkoutCart/{clientId}")
 	@Override
 	public String checkOutCart(@PathParam("clientId") int clientId) {
 		// TODO Auto-generated method stub
 		ServerGUI.appendStatus("clientId "+clientId+" requested checkout! processing...");
+		ClientShoppingCart cart = ServerData.getCartByClientId(clientId);
+		if(cart.getItems().size() == 0){
+			//checking out empty carts
+			return "<data><status>-1</status><msg>You cannot check out empty cart!</msg></data>";
+		}
 		double pay = ServerData.checkOut(clientId).calculateTotalPrice(0);
 		ServerGUI.appendStatus("checkout process complete for clientId "+clientId+"! paid € "+pay);
-		return String.valueOf(pay);
+		return "<data><status>1</status><msg>Check out successful! amount to be paid: € "+pay+"</msg></data>";
 	}
 
 }

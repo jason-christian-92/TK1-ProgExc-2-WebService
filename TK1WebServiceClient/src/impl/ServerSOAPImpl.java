@@ -22,16 +22,6 @@ public interface ServerSOAPImpl {
 
     /**
      * 
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    @Action(input = "http://impl/ServerSOAPImpl/getItemsRequest", output = "http://impl/ServerSOAPImpl/getItemsResponse")
-    public String getItems();
-
-    /**
-     * 
      * @param id
      * @return
      *     returns java.lang.String
@@ -42,6 +32,16 @@ public interface ServerSOAPImpl {
     public String getItemById(
         @WebParam(name = "id", partName = "id")
         int id);
+
+    /**
+     * 
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://impl/ServerSOAPImpl/getItemsRequest", output = "http://impl/ServerSOAPImpl/getItemsResponse")
+    public String getItems();
 
     /**
      * 
