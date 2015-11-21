@@ -1,0 +1,86 @@
+﻿<project name="TK1WebService-Client" default="run">
+
+<target name="init">
+	<echo>+-----SOAP-RPC and RESTful Web Service Client------+</echo>
+	<echo>+</echo>
+	<echo>+ TK1 2nd Programming Exercise</echo>
+	<echo>+ Team members:</echo>
+	<echo>+		- Jason Christian</echo>
+	<echo>+		- Dimas Prawita</echo>
+	<echo>+		- Subhadeep Manna</echo>
+	<echo>+		- Parvez Ahmad</echo>
+	<echo>+-----------------------------------+</echo>
+		
+	<presetdef name="javac">
+		<javac includeantruntime="false"/>
+	</presetdef>
+
+	<property name="src.core" value="src/core"/>
+	<property name="src.iface" value="src/iface"/>
+	<property name="src.impl" value="src/impl"/>
+	<property name="bin.impl" value="bin/impl"/>
+	<property name="src.objects" value="src/objects"/>
+	<property name="src.util" value="src/util"/>
+	<property name="ws.soap" value="http://localhost:8090/ws/tk1wsshoppingcart?wsdl"/> 
+
+	<path id="path.lib">
+		<fileset dir="lib">
+			<include name="**/*.jar"/>		
+		</fileset>	
+	</path>
+	<path id="path.bin">
+		<pathelement path="bin"/>	
+	</path>
+
+	<presetdef name="execclient">
+		<java classname="core.WebServClient" fork="yes">
+			<classpath refid="path.bin"/>
+			<classpath refid="path.lib"/>	
+		</java>
+	</presetdef>
+</target>
+
+<target name="wsimport" depends="init">
+	<echo message="Please start the server first before running this script!!"/>
+	<exec executable="wsimport">
+		<arg value="-keep"/>
+		<arg value="${ws.soap}"/>
+	</exec>
+
+	<!-- copying the source to src folder -->
+	<copy todir="${src.impl}">
+		<fileset dir="impl">
+			<exclude name="*.class"/>
+		</fileset>	
+	</copy>
+	<!-- copying the classes to bin folder -->
+	<copy todir="${bin.impl}">
+		<fileset dir="impl">
+			<exclude name="*.java"/>
+		</fileset>	
+	</copy>
+
+	<!--delete the generated directory. I'm doing this because <exec> with wsimport
+		cannot accept the "-s src" parameter (always return unrecognized parameter)-->
+	<delete dir="impl"/>
+</target>
+
+<target name="compile" depends="wsimport">
+	<javac destdir="bin" srcdir="${src.util}"/>
+	<javac destdir="bin" srcdir="${src.objects}"/>
+	<javac destdir="bin" srcdir="${src.iface}">
+		<classpath refid="path.lib"/>	
+	</javac>
+	<javac destdir="bin" srcdir="${src.core}">
+		<classpath refid="path.lib"/>	
+	</javac>
+</target>
+
+<target name="run" depends="compile">
+	<parallel>
+		<execclient taskname="SOAP-RPC client"><arg value="soap"/></execclient>
+		<execclient taskname="RESTful client"><arg value="rest"/></execclient>
+	</parallel>
+</target>
+
+</project>

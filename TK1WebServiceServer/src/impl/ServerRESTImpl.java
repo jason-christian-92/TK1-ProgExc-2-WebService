@@ -105,7 +105,7 @@ public class ServerRESTImpl implements IServer{
 			} else {
 				//not enough
 				ServerGUI.appendStatus("Stock:"+left+" | Not enough quantity! item not added to clientId "+clientId+"'s cart!");
-				return "<data><status>-2</status><msg>Not enough in stock! Only "+left+" items left!</msg></data>";
+				return "<data><status>-2</status><msg>Not enough in stock! Only "+(left-existInCart.getAmount())+" items left!</msg></data>";
 			}
 		}
 	}

@@ -1,0 +1,52 @@
+<project name="TK1WebService-Server" default="run">
+
+<target name="init">
+	<echo>+-----SOAP-RPC and RESTful Web Service Server------+</echo>
+	<echo>+</echo>
+	<echo>+ TK1 2nd Programming Exercise</echo>
+	<echo>+ Team members:</echo>
+	<echo>+		- Jason Christian</echo>
+	<echo>+		- Dimas Prawita</echo>
+	<echo>+		- Subhadeep Manna</echo>
+	<echo>+		- Parvez Ahmad</echo>
+	<echo>+-----------------------------------+</echo>
+		
+	<presetdef name="javac">
+		<javac includeantruntime="false"/>
+	</presetdef>
+
+	<property name="src.core" value="src/core"/>
+	<property name="src.iface" value="src/iface"/>
+	<property name="src.impl" value="src/impl"/>
+	<property name="src.objects" value="src/objects"/>
+	<property name="src.utils" value="src/utils"/>
+
+	<path id="path.lib">
+		<fileset dir="lib">
+			<include name="*.jar"/>		
+		</fileset>	
+	</path>
+	<path id="path.bin">
+		<pathelement path="bin"/>	
+	</path>
+</target>
+
+<target name="compile" depends="init">
+	<javac destdir="bin" srcdir="${src.utils}"/>
+	<javac destdir="bin" srcdir="${src.objects}"/>
+	<javac destdir="bin" srcdir="${src.iface}">
+		<classpath refid="path.lib"/>	
+	</javac>
+	<javac destdir="bin" srcdir="${src.impl}">
+		<classpath refid="path.lib"/>	
+	</javac>
+	<javac destdir="bin" srcdir="${src.core}">
+		<classpath refid="path.lib"/>	
+	</javac>
+</target>
+
+<target name="run" depends="compile">
+	<java fork="yes" classname="core.Server"/>
+</target>
+
+</project>

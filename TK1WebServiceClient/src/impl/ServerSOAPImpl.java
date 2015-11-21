@@ -22,19 +22,6 @@ public interface ServerSOAPImpl {
 
     /**
      * 
-     * @param id
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod
-    @WebResult(partName = "return")
-    @Action(input = "http://impl/ServerSOAPImpl/getItemByIdRequest", output = "http://impl/ServerSOAPImpl/getItemByIdResponse")
-    public String getItemById(
-        @WebParam(name = "id", partName = "id")
-        int id);
-
-    /**
-     * 
      * @return
      *     returns java.lang.String
      */
@@ -110,5 +97,18 @@ public interface ServerSOAPImpl {
     public String checkOutCart(
         @WebParam(name = "arg0", partName = "arg0")
         int arg0);
+
+    /**
+     * 
+     * @param id
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(partName = "return")
+    @Action(input = "http://impl/ServerSOAPImpl/getItemByIdRequest", output = "http://impl/ServerSOAPImpl/getItemByIdResponse")
+    public String getItemById(
+        @WebParam(name = "id", partName = "id")
+        int id);
 
 }
