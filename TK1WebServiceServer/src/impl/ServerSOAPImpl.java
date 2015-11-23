@@ -16,6 +16,9 @@ import utils.ServerData;
 import utils.XMLUtil;
 import iface.IServer;
 
+/*
+ * Server implementation for SOAP-RPC service
+ */
 @WebService
 @SOAPBinding(style=Style.RPC)
 public class ServerSOAPImpl implements IServer{
@@ -25,15 +28,14 @@ public class ServerSOAPImpl implements IServer{
 	
 	@WebMethod
 	@Override
-	public /*ArrayList<ItemObject>*/ String getItems() {
+	public String getItems() {
 		// TODO Auto-generated method stub
-		//return ItemsList.getItemsList();
 		return XMLUtil.xmlFromItemsList(ServerData.getUpdatedItemList());
 	}
 
 	@WebMethod
 	@Override
-	public /*ItemObject*/ String getItemById(@WebParam(name="id") int id) {
+	public  String getItemById(@WebParam(name="id") int id) {
 		// TODO Auto-generated method stub
 		return XMLUtil.xmlFromItem(ServerData.getItemById(id), true);
 	}
@@ -54,7 +56,6 @@ public class ServerSOAPImpl implements IServer{
 	@Override
 	public String logout(int clientId) {
 		// TODO Auto-generated method stub
-		//System.out.println("ClientId "+clientId+" logged out! returning back all items in the cart...");
 		ServerGUI.appendStatus("ClientId "+clientId+" logged out! returning back all items in the cart...");
 		ServerData.removeAllItemsFromCart(clientId);
 		ServerData.removeCartByClientId(clientId);

@@ -12,6 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+/*
+ * GUI components for the server
+ */
 public class ServerGUI extends JPanel{
 
 	public static enum SERVER_TYPE{

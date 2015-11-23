@@ -17,6 +17,9 @@ import utils.ServerData;
 import utils.XMLUtil;
 import iface.IServer;
 
+/*
+ * RESTful service implementation
+ */
 @Path("/server")
 public class ServerRESTImpl implements IServer{
 
@@ -59,8 +62,8 @@ public class ServerRESTImpl implements IServer{
 	public String logout(@PathParam("clientId") int clientId) {
 		// TODO Auto-generated method stub
 		ServerGUI.appendStatus("ClientId "+clientId+" logged out! returning back all items in the cart...");
-		ServerData.removeAllItemsFromCart(clientId);
-		ServerData.removeCartByClientId(clientId);
+		ServerData.removeAllItemsFromCart(clientId); //remove all items from the cart
+		ServerData.removeCartByClientId(clientId); //remove the cart
 		return String.valueOf(1);
 	}
 
@@ -69,8 +72,10 @@ public class ServerRESTImpl implements IServer{
 	@Path("addToCart/{clientId}/{itemId}/{amt}")
 	@Override
 	public String addToCart(@PathParam("clientId") int clientId, @PathParam("itemId")int itemId, @PathParam("amt")int amount) {
+		//get the cart
 		ClientShoppingCart cart = ServerData.getCartByClientId(clientId);
 		ServerGUI.appendStatus("Receives item to be added to the cart:[clientID]"+clientId+" - [ItemId]"+itemId+" - [Amount]"+amount);
+		//amount received is 0. Server assumes the client wants to remove the items from the cart
 		if (amount == 0) {
 			//remove item from cart
 			ServerGUI.appendStatus("amount = 0  | removing itemId "+itemId+" from clientId "+clientId+"'s cart..");
@@ -78,7 +83,10 @@ public class ServerRESTImpl implements IServer{
 			return "<data><status>2</status><msg>Item has been successfully removed from the cart!</msg></data>";
 		}
 		
+		//check whether the item already existed in the client's cart
 		ItemObject existInCart = cart.getItemById(itemId);
+		
+		//get the amount of the item left after subtracted with other client's cart
 		int left = ServerData.calculateLeftItemAmountById(clientId, itemId);
 		if (existInCart == null){
 			//no item yet
@@ -86,6 +94,7 @@ public class ServerRESTImpl implements IServer{
 			if (desiredItem.getID() == -1){
 				return "<data><status>-3</status><msg>Item does not exist!</msg></data>";
 			} else {
+				//compare the stock and requested amount
 				if (left < amount){
 					return "<data><status>-2</status><msg>Not enough in stock! Only "+left+" items left!</msg></data>";
 				} else {
@@ -128,9 +137,10 @@ public class ServerRESTImpl implements IServer{
 		ServerGUI.appendStatus("clientId "+clientId+" requested checkout! processing...");
 		ClientShoppingCart cart = ServerData.getCartByClientId(clientId);
 		if(cart.getItems().size() == 0){
-			//checking out empty carts
+			//checking out empty carts, send failed message
 			return "<data><status>-1</status><msg>You cannot check out empty cart!</msg></data>";
 		}
+		//calculate the bill
 		double pay = ServerData.checkOut(clientId).calculateTotalPrice(0);
 		ServerGUI.appendStatus("checkout process complete for clientId "+clientId+"! paid € "+pay);
 		return "<data><status>1</status><msg>Check out successful! amount to be paid: € "+pay+"</msg></data>";

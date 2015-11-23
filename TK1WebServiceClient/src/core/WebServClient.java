@@ -27,9 +27,12 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
+/*
+ * client's main class. It accepts 1 argument: the server's type "soap" or "rest"
+ */
 public class WebServClient extends JFrame implements IClient,WindowListener{
 
-	//URI for REST
+	//URI for REST service
 	public static final String REST_URI 		= "http://localhost:8080/tk1wsshoppingcart";
 	public static final String URI_LOGIN 		= "/server/login";
 	public static final String URI_LOGOUT 		= "/server/logout/"; //param: clientId
@@ -38,7 +41,7 @@ public class WebServClient extends JFrame implements IClient,WindowListener{
 	public static final String URI_GETCART 		= "/server/getClientCart/"; //param: clientId
 	public static final String URI_CHECKOUT 	= "/server/checkoutCart/"; //param: clientId
 	
-	//connection variables for REST
+	//connection variables for REST service
 	private ClientConfig config;
 	private Client client;
 	private WebResource service;
@@ -53,13 +56,16 @@ public class WebServClient extends JFrame implements IClient,WindowListener{
 	public static final String SERVICE_TYPE_SOAP = "soap";
 	public static final String SERVICE_TYPE_REST = "rest";
 	private String servType;
-	
+
+	//constructor
 	public WebServClient(String servType){
+		//need to supply the service type as the argument
 		if (!servType.equals(SERVICE_TYPE_REST) && !servType.equals(SERVICE_TYPE_SOAP)){
 			System.out.println("Unknown service type: "+servType);
 			return;
 		}
 		
+		//setup the connection settings based on the argument
 		clientId = -1;
 		this.servType = servType;
 		if (servType.equals(SERVICE_TYPE_SOAP)){
@@ -70,7 +76,10 @@ public class WebServClient extends JFrame implements IClient,WindowListener{
 			client = Client.create(config);
 			service = client.resource(REST_URI);
 		}
+		//setup the GUI
 		setupGUI();
+		
+		//immediately send login request
 		sendLogin();
 	}
 	
@@ -87,6 +96,7 @@ public class WebServClient extends JFrame implements IClient,WindowListener{
 		this.addWindowListener(this);
 	}
 	
+	//main function
 	public static void main(String[] args){
 		if (args.length == 0){
 			System.out.println("please specify service type '"+SERVICE_TYPE_SOAP+"' " +
@@ -96,12 +106,14 @@ public class WebServClient extends JFrame implements IClient,WindowListener{
 		new WebServClient(args[0]);
 	}
 	
+	//function to show Java's modal dialog window.
 	public void setOKDialog(String title, String message){
 		JOptionPane.showOptionDialog(null, message, title,
 				JOptionPane.PLAIN_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
 				null, new Object[]{"OK"}, "OK");
 	}
 	
+	//function to send login request
 	@Override
 	public void sendLogin() {
 		// TODO Auto-generated method stub
@@ -113,20 +125,26 @@ public class WebServClient extends JFrame implements IClient,WindowListener{
 				WebResource loginService = service.path(URI_LOGIN);
 				result = loginService.accept(MediaType.TEXT_PLAIN).get(String.class);
 			}
+			//get the clientId
 			clientId = Integer.parseInt(result);
+			//set the status
 			gui.setStatus("Successfully logged in! Obtained client ID: "+clientId+" from server!");
+			//immediately send the request for the list of items
 			sendItemListRequest();
 		} catch (ClientHandlerException ex){
+			//exceptions for REST service
 			ex.printStackTrace();
 			setOKDialog("Error", "The RESTFul server is not responding!! Closing application...");
 			System.exit(0);
 		} catch (WebServiceException ex){
+			//exceptions for SOAP-RPC service
 			ex.printStackTrace();
 			setOKDialog("Error", "The SOAP-RPC server is not responding!! Closing application...");
 			System.exit(0);
 		}
 	}
 
+	//function to add items to the cart
 	@Override
 	public void sendItemToCart(int itemId, int amount) {
 		// TODO Auto-generated method stub
@@ -138,6 +156,7 @@ public class WebServClient extends JFrame implements IClient,WindowListener{
 				WebResource addToCartService = service.path(URI_ADDTOCART).path(clientId+"/"+itemId+"/"+amount);
 				result = addToCartService.accept(MediaType.TEXT_XML).get(String.class);
 			}
+			//retrieves the status code
 			StatusMessageObject status = XMLParser.parseStatusMessage(result);
 			gui.setStatus(status.getMessage());
 			
